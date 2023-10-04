@@ -1,0 +1,67 @@
+/* colors */
+@primary-color: #3b73f8; // 全局主色
+@link-color: #1890ff; // 链接色
+@success-color: #22bf87; // 成功色
+@warning-color: #f67770; // 警告色
+@error-color: #f35248; // 错误色
+@like-color: #f01c1c; // 点赞色
+/* 中性色 */
+
+@gray-0: #282828;  // gray-1
+@gray-1: #585b5b;	// gray-2
+@gray-2: #949494;	// gray-3
+@gray-3: #f6f6f8;	// gray-9
+@gray-4: #ffffff;	// gray-10
+
+/* font-size */
+@size-12: 12px;
+@size-14: 14px;
+@size-16: 16px;
+@size-20: 20px;
+/* 间距 */
+@padding-4: 4px;
+@padding-8: 8px;
+@padding-12: 12px;
+@padding-20: 20px;
+
+// 动画
+@tr: all 0.3s;
+
+/* 全局控制 */
+body {
+	padding: 0px;
+	margin: 0px;
+	line-height: 1.5;
+	color: @gray-0;
+	font-size: @size-16;
+	background-color: @gray-4;
+	transition: all 0.3s;
+	font-family: Avenir, Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+p {
+	padding: 0px;
+	margin: 0px;
+}
+
+li {
+	list-style: none;
+}
+img {
+	padding: 0px;
+	margin: 0px;
+	display: block;
+}
+
+a {
+	text-decoration: none;
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+input, textarea{
+	outline: none;
+}
