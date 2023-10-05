@@ -23,6 +23,7 @@ img {
     z-index: -1;
     filter:blur(1px);
     object-fit: contain;
+    display: none;
 }
 
 </style>

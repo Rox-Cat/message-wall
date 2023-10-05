@@ -1,12 +1,12 @@
 <template>
-    <div class="yk-node-card" :style="{ width, background }">
+    <div class="yk-node-card" :style="{ width, background: cardColor[noteMessage.imgUrl] }">
         <div class="header">
-            <p class="time">2022-7-12</p>
-            <p class="label">留言</p>
+            <p class="time">{{ noteMessage.monment }}</p>
+            <p class="tag">{{ tagsType[noteMessage.wallType][noteMessage.label] }}</p>
         </div>
         <div class="main">
             <p class="message">
-                这是一段暖心的话，它或许不长，但是它是我现在最想说的。放在这里就留一个纪念吧，不用回头看，应为现在才是当下最好的。这是一段暖心的话，它或许不长，但是它是我现在最想说的。放在这里就留一个纪念吧。
+                {{ noteMessage.message }}
             </p>
         </div>
 
@@ -14,17 +14,17 @@
             <div class="footer-left">
                 <div class="like">
                     <span class="iconfont icon-aixin"></span>
-                    <span>12</span>
+                    <span>{{ noteMessage.like }}</span>
                 </div>
                 <div class="comment">
                     <span class="iconfont icon-B-liuyan"></span>
-                    <span>12</span>
+                    <span>{{ noteMessage.comment }}</span>
                 </div>
 
             </div>
 
             <div class="footer-right">
-                <span>我是魏文涛</span>
+                <span>{{ noteMessage.name }}</span>
             </div>
         </div>
     </div>
@@ -33,12 +33,27 @@
 <script setup>
 const props = defineProps({
     width: {
-        default: '288px'
+        default: '100%'
     },
     background: {
         default: 'rgba(252, 175, 162, 0.30)'
+    },
+    noteMessage: {
+        default: {}
+    },
+    tagsType: {
+        default: []
     }
 })
+
+const cardColor = [
+    "rgba(252,175,162,0.30)",
+    "rgba(255,227,148,0.30)",
+    "rgba(146,230,245,0.30)",
+    "rgba(168,237,138,0.31)",
+    "rgba(202,167,247,0.30)"
+
+]
 </script>
 
 <style lang="less" scoped>
@@ -68,7 +83,7 @@ const props = defineProps({
             color: @gray-0;
             text-align: justify;
             line-height: 22px;
-            font-weight: 400;
+            font-weight: 500;
         }
     }
 
@@ -111,14 +126,13 @@ const props = defineProps({
                     &:hover {
                         color: @primary-color;
                     }
-
                 }
             }
-
         }
 
 
 
 
     }
-}</style>
+}
+</style>

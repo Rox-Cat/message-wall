@@ -46,6 +46,7 @@
     display: flex;
     justify-content: space-evenly;
     padding: 20px 0;
+    margin-top: 40px;
     .infomation {
         .logo {
             color: @gray-4;

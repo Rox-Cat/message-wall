@@ -1,46 +1,63 @@
 <template>
     <div class="wall-message">
-        <p class="title">{{ wallType[wallId].title }}</p>
-        <p class="slogon">{{ wallType[wallId].slogan }}</p>
+        <p class="title">{{ wallType[wallInfoStore.wallId].title }}</p>
+        <p class="slogon">{{ wallType[wallInfoStore.wallId].slogan }}</p>
         <div class="tags">
             <p class="tag-list" :class="{ 'tag-selected': tagId === -1 }" @click="changeTag(-1)">全部</p>
-            <p class="tag-list" :class="{ 'tag-selected': tagId === index }" v-for="(tag, index) of tagType[wallId]"
-                :key="index" @click="changeTag(index)">
+            <p class="tag-list" :class="{ 'tag-selected': tagId === index }"
+                v-for="(tag, index) of tagsType[wallInfoStore.wallId]" :key="index" @click="changeTag(index)">
                 {{ tag }}
             </p>
         </div>
 
         <!-- 卡片容器 -->
         <div class="card">
-            <NodeCard></NodeCard>
+            <NoteCard v-for="(message, index) of messages" :tagsType="tagsType" :key="index" :noteMessage="message"
+                :wallId="wallInfoStore.wallId" class="card-item" width="288px">
+            </NoteCard>
         </div>
+
+        <!-- add 按钮 -->
+        <div class="add" :style="{ bottom: addBottom + 'px' }" @click="wallInfoStore.openFlyout = true">
+            <span class="iconfont icon-jia"></span>
+        </div>
+
+        <!-- 弹出框 -->
+        <div class="flyout">
+            <Flyout :title="wallType[wallInfoStore.wallId].title" :isFlyout="isFlyout">
+                <slot>
+                    <FlyoutCard></FlyoutCard>
+                </slot>
+            </Flyout>
+        </div>
+
     </div>
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue'
-import NodeCard from '@/components/NodeCard.vue'
+import NoteCard from '@/components/NoteCard.vue'
+import Flyout from '@/components/flyout/Flyout.vue';
+import { note } from '../../mock/index.js'
+import FlyoutCard from '@/components/flyout/FlyoutCard.vue';
+import { useWallInfoStore } from '@/stores';
+import { wallType, tagsType } from '@/utils/wallBasicInfo'
 
-const wallType = reactive([
-    {
-        title: '留言墙',
-        slogan: '很多事情值得记录，当然也值得回味。'
-    },
-    {
-        title: '照片墙',
-        slogan: '很多事情值得记录，当然也值得回味。'
-    }
-])
-const tagType = reactive([
-    ['留言', '目标', '理想', '过去', '未来', '爱情', '亲情', '友情', '秘密', '信条', '无题'],
-    ['我', 'ta', '喜欢的', '有意义的', '值得纪念的', '母校', '生活', '天空', '我在的城市', '大海', '无题']
-])
-const wallId = ref(0)
+
+const wallInfoStore = useWallInfoStore()
+
 const tagId = ref(-1)
 const changeTag = (index) => {
     tagId.value = index
 }
 
+
+/* 留言墙数据 */
+const messages = reactive(note.data)
+
+/* add 按钮 + 弹窗 */
+const addBottom = ref(30)
+const isFlyout = ref(true)
 </script>
 
 <style lang="less" scoped>
@@ -84,6 +101,36 @@ const changeTag = (index) => {
             font-weight: 600;
             // border: 1px solid @gray-0;
             border-radius: 16px;
+        }
+    }
+
+    .card {
+        padding-top: 28px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+
+        .card-item {
+            margin: 6px;
+        }
+
+    }
+
+    .add {
+        width: 56px;
+        height: 56px;
+        background: @gray-0;
+        box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.08);
+        border-radius: 28px;
+        position: fixed;
+        right: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .icon-jia {
+            font-size: 24px;
+            color: @gray-4;
         }
     }
 }
