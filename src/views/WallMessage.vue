@@ -12,22 +12,29 @@
 
         <!-- 卡片容器 -->
         <div class="card">
-            <NoteCard v-for="(message, index) of messages" :tagsType="tagsType" :key="index" :noteMessage="message"
-                :wallId="wallInfoStore.wallId" class="card-item" width="288px">
+            <NoteCard v-for="(message, index) of messages" :key="index" 
+                :tagsType="tagsType" :noteMessage="message"
+                class="card-item" width="288px" 
+                :class="{ 'card-selected': index === cardSelected }"
+                @click="selectCard(index)">
             </NoteCard>
         </div>
 
         <!-- add 按钮 -->
-        <div class="add" :style="{ bottom: addBottom + 'px' }" @click="wallInfoStore.openFlyout = true">
+        <div class="add" :style="{ bottom: addBottom + 'px' }" @click="addMessage">
             <span class="iconfont icon-jia"></span>
         </div>
 
         <!-- 弹出框 -->
         <div class="flyout">
-            <Flyout :title="wallType[wallInfoStore.wallId].title" :isFlyout="isFlyout">
-                <slot>
-                    <FlyoutCard></FlyoutCard>
-                </slot>
+            <Flyout :title="flyoutTitle">
+
+                <!-- 
+                    这是一个空白的新增的卡片内容
+                    我们是把这个内容，放到了Flyout组件中
+                 -->
+                <FlyoutCard v-if="cardSelected === -1"></FlyoutCard>
+                <FlyoutCardDetail v-else></FlyoutCardDetail>
             </Flyout>
         </div>
 
@@ -40,6 +47,7 @@ import NoteCard from '@/components/NoteCard.vue'
 import Flyout from '@/components/flyout/Flyout.vue';
 import { note } from '../../mock/index.js'
 import FlyoutCard from '@/components/flyout/FlyoutCard.vue';
+import FlyoutCardDetail from '@/components/flyout/FlyoutCardDetail.vue';
 import { useWallInfoStore } from '@/stores';
 import { wallType, tagsType } from '@/utils/wallBasicInfo'
 
@@ -52,12 +60,41 @@ const changeTag = (index) => {
 }
 
 
-/* 留言墙数据 */
-const messages = reactive(note.data)
+/* 留言墙信息 */
+const messages = reactive(note.data)    // 获取到的留言信息
+const cardSelected = ref(0)             // 被选中的card
+wallInfoStore.noteMessage = messages[0] // 先给个默认值
+const selectCard = (index) => {
+
+    // 选择卡片的效果 -> 添加一个类
+    // 第一次点击
+    if (index !== cardSelected.value) {
+        cardSelected.value = index
+        // 弹出框
+        wallInfoStore.openFlyout = true
+        flyoutTitle.value = '留言详情'
+
+        // 更新当前选中笔记的信息 -> store 中
+        wallInfoStore.noteMessage = messages[index]
+        console.log(wallInfoStore.noteMessage)
+    } else {
+        // 已经点过一次
+        cardSelected.value = -1
+        wallInfoStore.openFlyout = false
+    }
+}
+
 
 /* add 按钮 + 弹窗 */
-const addBottom = ref(30)
-const isFlyout = ref(true)
+const addBottom = ref(30)       // 按钮下边距控制
+const flyoutTitle = ref('留言详情')
+// wallInfoStore.openFlyout      // 弹出框的状态
+// 点击添加按钮
+const addMessage = () => {
+    flyoutTitle.value = '写留言'
+    cardSelected.value = -1
+    wallInfoStore.openFlyout = true
+}
 </script>
 
 <style lang="less" scoped>
@@ -112,6 +149,11 @@ const isFlyout = ref(true)
 
         .card-item {
             margin: 6px;
+            cursor: pointer;
+        }
+
+        .card-selected {
+            border: 1px solid @primary-color;
         }
 
     }

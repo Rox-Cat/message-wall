@@ -4,7 +4,10 @@ export const useWallInfoStore = defineStore('wallInfo', {
 	state: () => {
 		return {
 			wallId: 0,
-			openFlyout: true
+			openFlyout: true,
+			noteMessage: {
+
+			}
 		}
 	}
 })

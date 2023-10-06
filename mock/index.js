@@ -29,3 +29,23 @@ export const note = Mock.mock({
 		}
 	]
 })
+
+
+export const cardComment = Mock.mock({
+	'data|19': [
+		{
+			// 创建时间
+			"monment": new Date().toLocaleString(),
+			// id
+			'id|+1': 1,
+			'userId|+1': 1,
+			//内容
+			'message|24-96': '@cword',
+			//name
+			"name": '@cname',
+			//背景色
+			'imgUrl|0-10': 0,
+
+		}
+	]
+})

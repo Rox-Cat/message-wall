@@ -31,6 +31,7 @@
 </template>
 
 <script setup>
+import { tagsType } from '@/utils/wallBasicInfo.js'
 const props = defineProps({
     width: {
         default: '100%'
@@ -41,17 +42,14 @@ const props = defineProps({
     noteMessage: {
         default: {}
     },
-    tagsType: {
-        default: []
-    }
 })
 
 const cardColor = [
-    "rgba(252,175,162,0.30)",
-    "rgba(255,227,148,0.30)",
-    "rgba(146,230,245,0.30)",
-    "rgba(168,237,138,0.31)",
-    "rgba(202,167,247,0.30)"
+    "rgba(252,175,162,0.50)",
+    "rgba(255,227,148,0.50)",
+    "rgba(146,230,245,0.50)",
+    "rgba(168,237,138,0.50)",
+    "rgba(202,167,247,0.50)"
 
 ]
 </script>

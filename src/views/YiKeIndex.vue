@@ -1,7 +1,7 @@
 <template>
     <TopBar></TopBar>
     <div class="background-img"></div>
-    <img src="@\assets\images\辛德拉.jpg" alt="">
+    <img src="@\assets\images\bg1.jpg" alt="">
     <router-view></router-view>
     <FooterBar></FooterBar>
 </template>
@@ -21,8 +21,8 @@ img {
     top: 0;
     left: 0;
     z-index: -1;
-    filter:blur(1px);
-    object-fit: contain;
+    filter:blur(10px);
+    // object-fit: contain;
     display: none;
 }
 
