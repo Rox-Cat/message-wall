@@ -1,1 +1,2 @@
-console.log(new Date())
+let i = 0
+console.log(i++)

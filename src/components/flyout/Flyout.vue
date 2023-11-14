@@ -5,7 +5,7 @@
             <!-- 头部信息 -->
             <div class="yk-flyout-header">
                 <p class="yk-flyout-title">{{ title }}</p>
-                <span class="iconfont icon-guanbixiao" @click="wallInfoStore.openFlyout = false"></span>
+                <span class="iconfont icon-guanbixiao" @click="wallInfoStore.closeFlyout()"></span>
             </div>
 
             <!-- 核心区域 -->

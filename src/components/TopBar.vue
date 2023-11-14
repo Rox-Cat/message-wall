@@ -9,8 +9,12 @@
 
         <!-- 菜单信息 -->
         <div class="menu">
-            <YKButton size="small" nom="cprimary" class="menu-message">留言墙</YKButton>
-            <YKButton size="small" nom="secondary" class="menu-photo">照片墙</YKButton>
+            <YKButton size="small" :nom="$route.meta.wallId === 0 ? 'cprimary' : 'secondary'" class="menu-message" @click="skipRoute(0)">
+                留言墙
+            </YKButton>
+            <YKButton size="small" :nom="$route.meta.wallId === 1 ? 'cprimary' : 'secondary'" class="menu-photo" @click="skipRoute(1)">
+                照片墙
+            </YKButton>
         </div>
 
         <!-- 用户信息 -->
@@ -22,7 +26,19 @@
 
 <script setup>
 import YKButton from './YKButton.vue'
-import { ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+
+
+const router = useRouter()
+const route = useRoute()
+
+const skipRoute = (wallId) =>{
+    if (wallId === 0) {
+        router.push({ path: '/messageWall'})
+    } else {
+        router.push({ path: '/photoWall'})
+    }
+}
 </script>
 
 <style lang="less" scoped>
@@ -70,7 +86,8 @@ import { ref } from 'vue'
 
     .menu {
         box-sizing: border-box;
-        .menu-message{
+
+        .menu-message {
             margin-right: 20px;
         }
 
