@@ -1,10 +1,10 @@
 <template>
-    <div class="yk-node-card" :style="{ width, background: cardColor[noteMessage.imgUrl] }">
+    <div class="yk-node-card" :style="{ width, background: cardColor[noteMessage.color] }">
         <div class="header">
             <p class="time">{{ noteMessage.monment }}</p>
-            <p class="tag">{{ tagsType[noteMessage.wallType][noteMessage.label] }}</p>
+            <p class="tag">{{ tagsType[$route.meta.wallId][noteMessage.label] }}</p>
         </div>
-        <div class="main">
+        <div class="main" @click="$emit('showDetail')">
             <p class="message">
                 {{ noteMessage.message }}
             </p>
@@ -13,12 +13,13 @@
         <div class="footer">
             <div class="footer-left">
                 <div class="like">
-                    <span class="iconfont icon-aixin"></span>
-                    <span>{{ noteMessage.like }}</span>
+                    <span class="iconfont icon-aixin" :class="{ islike: noteMessage.isLike[0].count > 0 }"
+                        @click="addLike"></span>
+                    <span>{{ noteMessage.like[0].count }}</span>
                 </div>
                 <div class="comment">
                     <span class="iconfont icon-B-liuyan"></span>
-                    <span>{{ noteMessage.comment }}</span>
+                    <span>{{ noteMessage.commontCount[0].count }}</span>
                 </div>
 
             </div>
@@ -32,6 +33,9 @@
 
 <script setup>
 import { tagsType } from '@/utils/wallBasicInfo.js'
+import { insertFeedback } from '@/api/index.js'
+import { useUserInfoStore } from '../stores/index.js';
+const userInfoStore = useUserInfoStore()
 const props = defineProps({
     width: {
         default: '100%'
@@ -43,15 +47,32 @@ const props = defineProps({
         default: {}
     },
 })
-
+// const emit = defineEmits(['showDetail'])
 const cardColor = [
     "rgba(252,175,162,0.50)",
     "rgba(255,227,148,0.50)",
     "rgba(146,230,245,0.50)",
     "rgba(168,237,138,0.50)",
     "rgba(202,167,247,0.50)"
-
 ]
+
+// 添加一条喜欢
+const addLike = () => {
+    if (props.noteMessage.isLike[0].count === 0) {
+        insertFeedback({
+            wallId: props.noteMessage.id, // 这里的id是noteMessage.id不是留言墙的id
+            userId: userInfoStore.userId,
+            type: 0,
+            moment: new Date()
+        }).then(res => {
+            if (res.status === 200) {
+                props.noteMessage.like[0].count++
+                props.noteMessage.isLike[0].count++
+            }
+            
+        })
+    }
+}
 </script>
 
 <style lang="less" scoped>
@@ -113,6 +134,10 @@ const cardColor = [
                     &:hover {
                         color: @like-color;
                     }
+                }
+
+                .islike {
+                    color: @like-color;
                 }
             }
 

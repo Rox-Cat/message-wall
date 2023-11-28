@@ -1,21 +1,21 @@
 <template>
     <transition name="view">
-        <div class="yk-viewer" v-if="isView && $route.meta.wallId === 1">
+        <div class="yk-viewer" v-if="isView && $route.meta.wallId === 1 && wallInfoStore.selectedCardIndex !== -1">
             <!-- 背景 -->
             <div class="bg">
 
             </div>
             <!-- 图片显示区域 -->
             <div class="viewer-photo">
-                <img :src="'src/assets/images/photoWall/' + photos[wallInfoStore.photoIndex].imgUrl + '.jpg'" alt="">
+                <img :src="wallInfoStore.noteMessage.imgUrl" alt="">
             </div>
 
             <!-- 图片切换的按钮 -->
             <div class="switch switch-left">
-                <span class="iconfont .icon-xiangzuo" @click="switchToLeft"></span>
+                <span class="iconfont icon-xiangzuo" @click="switchToLeft"></span>
             </div>
             <div class="switch switch-right">
-                <span class="iconfont .icon-xiangyou" @click="switchToright"></span>
+                <span class="iconfont icon-xiangyou" @click="switchToright"></span>
             </div>
         </div>
     </transition>
@@ -26,32 +26,28 @@ import { useWallInfoStore } from '@/stores';
 const wallInfoStore = useWallInfoStore()
 
 const props = defineProps({
-    photos: {
-        default: []
-    },
     isView: {
         default: false
     }
 })
 
 const switchToLeft = () => {
-    console.log(wallInfoStore.photoIndex)
-    if (--wallInfoStore.photoIndex === -1) {
+    wallInfoStore.selectedCardIndex--
+    if (wallInfoStore.selectedCardIndex === -1) {
         wallInfoStore.openFlyout = false
-        wallInfoStore.photoIndex === -1
     }
     else {
-        wallInfoStore.noteMessage = props.photos[wallInfoStore.photoIndex]
+        wallInfoStore.noteMessage = wallInfoStore.allNoteCardMessages[wallInfoStore.selectedCardIndex]
     }
 }
 
 const switchToright = () => {
-    console.log(wallInfoStore.photoIndex)
-    if (++wallInfoStore.photoIndex > props.photos.length - 1) {
+    wallInfoStore.selectedCardIndex++
+    if (wallInfoStore.selectedCardIndex === wallInfoStore.allNoteCardMessages.length) {
         wallInfoStore.openFlyout = false
-        wallInfoStore.photoIndex === -1
+        wallInfoStore.selectedCardIndex === -1 // selectedCardIndex 等于 -1 表示未选择图片
     } else {
-        wallInfoStore.noteMessage = props.photos[wallInfoStore.photoIndex]
+        wallInfoStore.noteMessage = wallInfoStore.allNoteCardMessages[wallInfoStore.selectedCardIndex]
     }
 }
 </script>
@@ -140,15 +136,23 @@ const switchToright = () => {
 
         .iconfont {
             position: relative;
+            top: -14px;
             width: 30px;
             height: 30px;
             font-size: 40px;
             color: #fff;
+
+            &.icon-xiangyou {
+                left: -3px;
+            }
+
+            &.icon-xiangzuo {
+                left: -3px;
+            }
         }
 
         &:hover {
             opacity: 1;
-
         }
 
     }

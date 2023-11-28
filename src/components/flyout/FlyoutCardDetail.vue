@@ -8,45 +8,102 @@
 
         <!-- 书写评论 -->
         <div class="form">
-            <textarea placeholder="请输入评论..." class="message" maxlength="96"></textarea>
+            <textarea placeholder="请输入评论..." class="message" maxlength="96" v-model="comment"></textarea>
             <div class="name-comment">
-                <input type="text" placeholder="签名..." class="name">
-                <YKButton>评论</YKButton>
+                <input type="text" placeholder="签名..." class="name" v-model="name">
+                <YKButton :class="{ notAllowed: !existContent }" @click="submitComment">评论</YKButton>
             </div>
         </div>
 
         <!-- 展示评论 -->
 
         <div class="comment">
-            <div class="title">评论 {{ wallInfoStore.noteMessage.comment }}</div>
-            <div class="comment-item" v-for="(item, index) of cardComment.data" :key="index">
-                <div class="item-left user-avatar" 
-                    :style="{background: availableColors[item.imgUrl]}">
+            <div class="title">评论 {{ wallInfoStore.noteMessage.commontCount[0].count }}</div>
+            <div class="comment-item" v-for="(item, index) of wallInfoStore.noteComment" :key="index">
+                <div class="item-left user-avatar" :style="{ background: availableColors[item.imgUrl] }">
                 </div>
                 <div class="item-right">
                     <div class="username-time">
                         <p class="username">{{ item.name }}</p>
-                        <p class="time">{{ item.monment }}</p>
+                        <p class="time">{{ item.moment }}</p>
                     </div>
                     <div class="comment-context">
-                        {{ item.message }}
+                        {{ item.comment }}
                     </div>
                 </div>
 
             </div>
+            <div class="more-comment" v-show="nowPage > 0">加载更多</div>
         </div>
     </div>
 </template>
 
 <script setup>
+import { computed, onMounted, ref, watch } from 'vue'
 import NoteCard from '../NoteCard.vue'
 import YKButton from '@/components/YKButton.vue'
-import { useWallInfoStore } from '@/stores';
+import { useWallInfoStore, useUserInfoStore } from '@/stores';
 import { availableColors } from '@/utils/wallBasicInfo.js'
-import { cardComment } from '../../../mock/index.js'
+import { reqInsertComment, reqFindCommentPage } from '@/api/index.js'
+
 const wallInfoStore = useWallInfoStore()
+const userInfoStore = useUserInfoStore()
 
+const comment = ref("")
+const name = ref('匿名')
+const existContent = computed(() => {
+    return comment.value && name.value
+})
 
+// 提交评论
+const submitComment = () => {
+    if (existContent.value) {
+        const color = Math.floor(Math.random() * 14)
+        const tmpData = {
+            wallId: wallInfoStore.noteMessage.id,
+            userId: userInfoStore.userId,
+            imgUrl: color,
+            comment: comment.value,
+            name: name.value,
+            moment: new Date().toLocaleString()
+        }
+        reqInsertComment(tmpData).then(res => {
+            wallInfoStore.noteComment.unshift(tmpData)
+            wallInfoStore.noteMessage.commontCount[0].count++
+
+        })
+    }
+}
+
+/* 分页获取评论 */
+const nowPage = ref(1)
+const pageSize = ref(5)
+const getComment = () => {
+    if (nowPage.value > 0) {
+        const tmpData = {
+            id: wallInfoStore.noteMessage.id,
+            page: nowPage.value,
+            pageSize: pageSize.value
+        }
+        reqFindCommentPage(tmpData).then(res => {
+            wallInfoStore.noteComment.push(...res.message)
+            if (res.message.length === pageSize) {
+                nowPage.value++
+            } else {
+                nowPage.value = 0
+            }
+        })
+    }
+}
+watch(() => wallInfoStore.selectedCardIndex, () => {
+    nowPage.value = 1
+    wallInfoStore.noteComment = []
+    getComment()
+})
+
+onMounted(() => {
+    getComment()
+})
 </script>
 
 <style lang="less" scoped>
@@ -90,6 +147,7 @@ const wallInfoStore = useWallInfoStore()
 
     .comment {
         margin-top: 30px;
+
         .title {
             width: 56px;
             height: 20px;
@@ -102,8 +160,9 @@ const wallInfoStore = useWallInfoStore()
 
         .comment-item {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             padding-bottom: 30px;
+
             .user-avatar {
                 flex: none;
                 width: 28px;
@@ -144,6 +203,13 @@ const wallInfoStore = useWallInfoStore()
                     font-weight: 400;
                 }
             }
+        }
+
+        .more-comment {
+            color: @gray-3;
+            text-align: center;
+            padding: 20px;
+            cursor: pointer;
         }
     }
 }

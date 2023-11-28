@@ -4,22 +4,25 @@
         <!-- logo信息 -->
         <div class="logo">
             <img src="@/assets/images/favicon.ico" class="logo-img">
-            <p class="logo-name"> Rox7 的留言墙</p>
+            <p class="logo-name"> Rox7的留言墙</p>
         </div>
 
         <!-- 菜单信息 -->
         <div class="menu">
-            <YKButton size="small" :nom="$route.meta.wallId === 0 ? 'cprimary' : 'secondary'" class="menu-message" @click="skipRoute(0)">
+            <YKButton size="small" :nom="$route.meta.wallId === 0 ? 'cprimary' : 'secondary'" class="menu-message"
+                @click="skipRoute(0)">
                 留言墙
             </YKButton>
-            <YKButton size="small" :nom="$route.meta.wallId === 1 ? 'cprimary' : 'secondary'" class="menu-photo" @click="skipRoute(1)">
+            <YKButton size="small" :nom="$route.meta.wallId === 1 ? 'cprimary' : 'secondary'" class="menu-photo"
+                @click="skipRoute(1)">
                 照片墙
             </YKButton>
         </div>
 
         <!-- 用户信息 -->
         <div class="user">
-            <div class="user-header"> 用户信息</div>
+            <p class="user-header"> 用户信息</p>
+            <img src="src/assets/images/avatar.webp">
         </div>
     </div>
 </template>
@@ -27,17 +30,24 @@
 <script setup>
 import YKButton from './YKButton.vue'
 import { useRouter, useRoute } from 'vue-router'
-
+import { useWallInfoStore } from '../stores';
 
 const router = useRouter()
 const route = useRoute()
-
-const skipRoute = (wallId) =>{
+const wallInfoStore = useWallInfoStore()
+const skipRoute = (wallId) => {
+    // 切换时，关闭弹出框
+    wallInfoStore.closeFlyout()
+    // 清空当前墙的数据
+    wallInfoStore.$reset()
     if (wallId === 0) {
-        router.push({ path: '/messageWall'})
+        router.push({ path: '/messageWall' })
+        wallInfoStore.wallId = 0
     } else {
-        router.push({ path: '/photoWall'})
+        router.push({ path: '/photoWall' })
+        wallInfoStore.wallId = 1
     }
+
 }
 </script>
 
@@ -66,12 +76,13 @@ const skipRoute = (wallId) =>{
         box-sizing: border-box;
         width: 200px;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         padding-left: 20px;
 
         .logo-img {
-            width: 20px;
+            height: 25px;
+            margin-right: 10px;
         }
 
         .logo-name {
@@ -98,11 +109,20 @@ const skipRoute = (wallId) =>{
     .user {
         box-sizing: border-box;
         width: 200px;
-
-        .user-head {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        .user-header {
+            text-align: center;
             border-radius: 50%;
+            font-weight: 700;
+            // height: 36px;
+        }
+
+        img {
             height: 36px;
             width: 36px;
+            border-radius: 20%;
         }
     }
 

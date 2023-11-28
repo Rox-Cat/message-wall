@@ -5,7 +5,7 @@ const routes = [
 		path: '/',
 		redirect: '/messageWall',
 		name: 'home',
-		component: () => import('@/views/YiKeIndex.vue'),
+		component: () => import('@/views/Home.vue'),
 		children: [
 			{
 				path: 'messageWall',
@@ -55,7 +55,6 @@ const routes = [
 	}
 ]
 const router = createRouter({
-	// ??? import.meta.env.BASE_URL
 	history: createWebHashHistory(import.meta.env.BASE_URL),
 	routes
 })

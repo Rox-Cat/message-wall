@@ -3,7 +3,7 @@
         <div class="infomation">
             <div class="logo">
                 <img src="@/assets/images/favicon.ico" alt="">
-                <span>一刻时光</span>
+                <span>Rox7的留言墙</span>
             </div>
 
             <div class="logo-info">
@@ -29,7 +29,17 @@
 
         <div class="money">
             <p class="title">打赏</p>
-            <div class="money-img"></div>
+            <div class="money-img">
+                <div class="wechat">
+                    <img src="src/assets/images/wechat.webp">
+                    <p>微信</p>
+                </div>
+
+                <div class="alipay">
+                    <img src="src/assets/images/alipay.webp">
+                    <p>支付宝</p>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -47,6 +57,7 @@
     justify-content: space-evenly;
     padding: 20px 0;
     margin-top: 40px;
+
     .infomation {
         .logo {
             color: @gray-4;
@@ -55,8 +66,14 @@
             align-items: center;
             margin-bottom: 24px;
 
+            img {
+                height: 25px;
+            }
+
             span {
+                margin-left: 10px;
                 font-size: @size-20;
+                font-weight: 600;
             }
         }
 
@@ -82,10 +99,10 @@
 
     .link {
         min-width: 200px;
+
         .link-title {
             width: 32px;
             height: 22px;
-            opacity: 0.5;
             font-size: @size-16;
             color: @gray-4;
             letter-spacing: 0;
@@ -100,9 +117,9 @@
             p {
                 width: 48px;
                 height: 17px;
-                opacity: 0.5;
+                // opacity: 0.5;  // 这里使用opacity会有bug，可能是和css中filter的效果有冲突
                 font-size: @size-12;
-                color: @gray-4;
+                color: @gray-2;
                 letter-spacing: 0;
                 text-align: justify;
                 font-weight: 400;
@@ -113,16 +130,34 @@
 
     }
 
-    .money{
+    .money {
         width: 300px;
+        color: @gray-2;
 
-        .title{
+        .title {
             font-size: @size-16;
-            color: @gray-2;
+            color: @gray-4;
             letter-spacing: 0;
             text-align: justify;
             font-weight: 400;
             margin-bottom: 10px;
+        }
+
+        .money-img {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            img {
+                width: 120px;
+            }
+
+            p {
+                font-size: @size-16;
+                display: inline-block;
+                vertical-align: middle;
+
+            }
         }
     }
 }

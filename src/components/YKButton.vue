@@ -67,5 +67,9 @@ const props = defineProps({
 .csecondary {
     background: @gray-4;
     color: @gray-1;
+} 
+.notAllowed {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 </style>
